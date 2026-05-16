@@ -1,0 +1,202 @@
+---
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import { GITHUB_URL, BLOG_URL } from '../consts';
+---
+
+<!doctype html>
+<html lang="ko">
+	<head>
+		<BaseHead title="이력서 — 김민철" description="게임 클라이언트 개발자 김민철의 이력서" />
+	</head>
+	<body>
+		<Header />
+		<main class="resume">
+			<div class="print-btn no-print">
+				<button onclick="window.print()">PDF로 저장</button>
+			</div>
+
+			<header class="resume-header">
+				<h1>김민철</h1>
+				<p class="role">게임 클라이언트 개발자</p>
+				<div class="contacts">
+					<a href="mailto:lostwaltz89@gmail.com">lostwaltz89@gmail.com</a>
+					<span class="sep">·</span>
+					<a href={GITHUB_URL} target="_blank" rel="noopener">github.com/lostwaltz</a>
+					<span class="sep">·</span>
+					<a href={BLOG_URL} target="_blank" rel="noopener">istino.github.io</a>
+				</div>
+			</header>
+
+			<hr />
+
+			<section>
+				<h2>기술 스택</h2>
+				<div class="skill-grid">
+					<div class="skill-group">
+						<h3>주력</h3>
+						<p>C#, Unity, C++</p>
+					</div>
+					<div class="skill-group">
+						<h3>그래픽스</h3>
+						<p>DirectX</p>
+					</div>
+					<div class="skill-group">
+						<h3>기타</h3>
+						<p>DOTween, JSON</p>
+					</div>
+				</div>
+			</section>
+
+			<hr />
+
+			<section>
+				<h2>프로젝트</h2>
+
+				<div class="project">
+					<div class="project-header">
+						<h3>Rolice</h3>
+						<span class="tech-tags">Unity · C# · DOTween · JSON</span>
+					</div>
+					<p class="project-desc">컬러 다이스 퍼즐 게임. 퍼즐 메커니즘 설계 및 클라이언트 전반 구현.</p>
+					<ul>
+						<li>DOTween을 활용한 애니메이션 시스템 구현</li>
+						<li>JSON 기반 세이브 시스템 설계</li>
+					</ul>
+				</div>
+			</section>
+
+			<hr />
+
+			<section>
+				<h2>학력</h2>
+				<p class="placeholder">(추가 예정)</p>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	.resume {
+		max-width: 720px;
+		padding-top: 2em;
+		padding-bottom: 4em;
+	}
+	.print-btn {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 2em;
+	}
+	.print-btn button {
+		padding: 0.5em 1.2em;
+		background: transparent;
+		border: 1px solid rgb(var(--border));
+		border-radius: 6px;
+		color: rgb(var(--text-muted));
+		font-size: 0.875rem;
+		cursor: pointer;
+		transition: border-color 0.15s, color 0.15s;
+	}
+	.print-btn button:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+
+	.resume-header h1 {
+		font-size: 2.5rem;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		margin-bottom: 0.25em;
+	}
+	.role {
+		color: rgb(var(--text-muted));
+		font-size: 1.1rem;
+		margin: 0 0 0.75em;
+	}
+	.contacts {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25em;
+		font-size: 0.9rem;
+		color: rgb(var(--text-muted));
+	}
+	.contacts a {
+		color: rgb(var(--text-muted));
+	}
+	.contacts a:hover { color: var(--accent); }
+	.sep { opacity: 0.4; }
+
+	h2 {
+		font-size: 1rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
+		color: rgb(var(--text-muted));
+		margin: 1.5em 0 1em;
+	}
+
+	.skill-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+		gap: 1em;
+	}
+	.skill-group h3 {
+		font-size: 0.875rem;
+		color: rgb(var(--text-muted));
+		margin-bottom: 0.25em;
+	}
+	.skill-group p {
+		font-family: monospace;
+		font-size: 0.95rem;
+		margin: 0;
+	}
+
+	.project { margin-bottom: 2em; }
+	.project-header {
+		display: flex;
+		align-items: baseline;
+		gap: 1em;
+		flex-wrap: wrap;
+		margin-bottom: 0.5em;
+	}
+	.project-header h3 {
+		font-size: 1.2rem;
+		font-weight: 700;
+		margin: 0;
+	}
+	.tech-tags {
+		font-size: 0.8rem;
+		color: rgb(var(--text-muted));
+		font-family: monospace;
+	}
+	.project-desc {
+		color: rgb(var(--text-muted));
+		font-size: 0.95rem;
+		margin-bottom: 0.5em;
+	}
+	.project ul {
+		margin: 0;
+		padding-left: 1.2em;
+		font-size: 0.95rem;
+	}
+	.project ul li { margin-bottom: 0.25em; }
+
+	.placeholder {
+		color: rgb(var(--text-muted));
+		font-style: italic;
+	}
+
+	/* 인쇄 시 추가 스타일 */
+	@media print {
+		.resume {
+			padding-top: 0;
+		}
+		.resume-header h1 { color: black !important; }
+		h2 { color: #666 !important; }
+		.role, .contacts, .project-desc, .tech-tags {
+			color: #444 !important;
+		}
+	}
+</style>

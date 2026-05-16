@@ -1,0 +1,102 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+
+export async function getStaticPaths() {
+	const items = await getCollection('portfolio', ({ data }) => !data.draft);
+	return items.map((item) => ({
+		params: { slug: item.id },
+		props: item,
+	}));
+}
+
+const item = Astro.props;
+const { Content } = await render(item);
+---
+
+<html lang="ko">
+	<head>
+		<BaseHead title={`${item.data.title} — 김민철`} description={item.data.description} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="back no-print">
+				<a href="/portfolio">← 포트폴리오</a>
+			</div>
+
+			<article>
+				<div class="article-header">
+					<h1>{item.data.title}</h1>
+					<div class="tech-tags">
+						{item.data.tech.map((t) => <span>{t}</span>)}
+					</div>
+					<p class="desc">{item.data.description}</p>
+					{(item.data.github || item.data.link) && (
+						<div class="ext-links">
+							{item.data.github && <a href={item.data.github} target="_blank" rel="noopener">GitHub →</a>}
+							{item.data.link && <a href={item.data.link} target="_blank" rel="noopener">링크 →</a>}
+						</div>
+					)}
+				</div>
+				<hr />
+				<div class="prose">
+					<Content />
+				</div>
+			</article>
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main { max-width: 720px; padding-top: 2em; padding-bottom: 4em; }
+
+	.back {
+		margin-bottom: 2em;
+		font-size: 0.875rem;
+	}
+	.back a { color: rgb(var(--text-muted)); }
+	.back a:hover { color: var(--accent); }
+
+	.article-header { margin-bottom: 2em; }
+	h1 {
+		font-size: 2.5rem;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		margin-bottom: 0.5em;
+	}
+	.tech-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4em;
+		margin-bottom: 1em;
+	}
+	.tech-tags span {
+		padding: 0.2em 0.6em;
+		background: rgb(var(--bg-card));
+		border: 1px solid rgb(var(--border));
+		border-radius: 4px;
+		font-size: 0.8rem;
+		font-family: monospace;
+		color: rgb(var(--text-muted));
+	}
+	.desc {
+		color: rgb(var(--text-muted));
+		font-size: 1rem;
+		margin-bottom: 1em;
+	}
+	.ext-links {
+		display: flex;
+		gap: 1em;
+		font-size: 0.875rem;
+	}
+	.ext-links a { color: var(--accent); }
+
+	.prose { font-size: 1rem; line-height: 1.75; }
+	.prose :global(h2) { font-size: 1.5rem; margin-top: 2em; }
+	.prose :global(h3) { font-size: 1.2rem; margin-top: 1.5em; }
+	.prose :global(p) { color: rgb(var(--text)); }
+</style>

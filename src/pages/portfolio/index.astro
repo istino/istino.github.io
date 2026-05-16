@@ -1,0 +1,153 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { getCollection } from 'astro:content';
+
+const items = (await getCollection('portfolio', ({ data }) => !data.draft))
+	.sort((a, b) => a.data.priority - b.data.priority);
+---
+
+<!doctype html>
+<html lang="ko">
+	<head>
+		<BaseHead title="포트폴리오 — 김민철" description="김민철의 게임 클라이언트 개발 포트폴리오" />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<div class="print-btn no-print">
+				<button onclick="window.print()">PDF로 저장</button>
+			</div>
+
+			<div class="portfolio-header">
+				<h1>포트폴리오</h1>
+				<p>김민철 · 게임 클라이언트 개발자</p>
+			</div>
+
+			<hr />
+
+			{items.map((item) => (
+				<article class="portfolio-item">
+					<div class="item-header">
+						<h2>
+							<a href={`/portfolio/${item.id}/`}>{item.data.title}</a>
+						</h2>
+						<div class="tech-tags">
+							{item.data.tech.map((t) => <span>{t}</span>)}
+						</div>
+					</div>
+					<p class="item-desc">{item.data.description}</p>
+					<div class="item-links no-print">
+						<a href={`/portfolio/${item.id}/`}>상세 보기 →</a>
+						{item.data.github && <a href={item.data.github} target="_blank" rel="noopener">GitHub</a>}
+						{item.data.link && <a href={item.data.link} target="_blank" rel="noopener">링크</a>}
+					</div>
+				</article>
+			))}
+		</main>
+		<Footer />
+	</body>
+</html>
+
+<style>
+	main {
+		max-width: 720px;
+		padding-top: 2em;
+		padding-bottom: 4em;
+	}
+	.print-btn {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 2em;
+	}
+	.print-btn button {
+		padding: 0.5em 1.2em;
+		background: transparent;
+		border: 1px solid rgb(var(--border));
+		border-radius: 6px;
+		color: rgb(var(--text-muted));
+		font-size: 0.875rem;
+		cursor: pointer;
+		transition: border-color 0.15s, color 0.15s;
+	}
+	.print-btn button:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+
+	.portfolio-header h1 {
+		font-size: 2.5rem;
+		font-weight: 800;
+		letter-spacing: -0.03em;
+		margin-bottom: 0.25em;
+	}
+	.portfolio-header p {
+		color: rgb(var(--text-muted));
+		margin: 0;
+	}
+
+	.portfolio-item {
+		padding: 2em 0;
+		border-bottom: 1px solid rgb(var(--border));
+	}
+	.item-header {
+		display: flex;
+		align-items: baseline;
+		gap: 1em;
+		flex-wrap: wrap;
+		margin-bottom: 0.75em;
+	}
+	.item-header h2 {
+		font-size: 1.5rem;
+		font-weight: 700;
+		margin: 0;
+	}
+	.item-header h2 a {
+		color: rgb(var(--text));
+		text-decoration: none;
+	}
+	.item-header h2 a:hover {
+		color: var(--accent);
+	}
+	.tech-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4em;
+	}
+	.tech-tags span {
+		padding: 0.2em 0.6em;
+		background: rgb(var(--bg-card));
+		border: 1px solid rgb(var(--border));
+		border-radius: 4px;
+		font-size: 0.775rem;
+		font-family: monospace;
+		color: rgb(var(--text-muted));
+	}
+	.item-desc {
+		color: rgb(var(--text-muted));
+		font-size: 0.95rem;
+		margin-bottom: 1em;
+	}
+	.item-links {
+		display: flex;
+		gap: 1em;
+		font-size: 0.875rem;
+	}
+	.item-links a {
+		color: rgb(var(--text-muted));
+	}
+	.item-links a:hover { color: var(--accent); }
+
+	@media print {
+		.portfolio-header h1 { color: black !important; }
+		.portfolio-header p { color: #444 !important; }
+		.item-desc { color: #444 !important; }
+		.item-header h2 a { color: black !important; }
+		.tech-tags span {
+			background: #f0f0f0 !important;
+			border-color: #ccc !important;
+			color: #333 !important;
+		}
+	}
+</style>
