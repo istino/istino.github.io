@@ -14,12 +14,26 @@ body {
 	margin: 0;
 	padding: 0;
 	text-align: left;
-	background: rgb(var(--bg));
+	background-color: rgb(var(--bg));
+	background-image: radial-gradient(rgba(88, 166, 255, 0.055) 1px, transparent 1px);
+	background-size: 28px 28px;
 	color: rgb(var(--text));
 	font-size: 20px;
 	line-height: 1.7;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
+}
+
+body::before {
+	content: '';
+	position: fixed;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, var(--accent), transparent);
+	z-index: 200;
+	pointer-events: none;
 }
 
 main {
