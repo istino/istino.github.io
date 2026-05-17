@@ -5,9 +5,8 @@ import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION, GITHUB_URL } from '../consts';
 import { getCollection } from 'astro:content';
 
-const posts = (await getCollection('blog'))
-	.sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
-	.slice(0, 3);
+const portfolio = (await getCollection('portfolio', ({ data }) => !data.draft))
+	.sort((a, b) => a.data.priority - b.data.priority);
 ---
 
 <!doctype html>
@@ -18,6 +17,11 @@ const posts = (await getCollection('blog'))
 	<body>
 		<Header />
 		<main>
+			<div class="print-btn no-print">
+				<button onclick="window.print()">PDF로 저장</button>
+			</div>
+
+			<!-- 나는 누구인가 -->
 			<section class="hero">
 				<p class="label">Game Client Developer</p>
 				<h1>김민철</h1>
@@ -25,35 +29,63 @@ const posts = (await getCollection('blog'))
 					게임의 경험을 만드는 클라이언트 개발자.<br />
 					C#과 Unity로 플레이어가 느끼는 순간을 설계합니다.
 				</p>
-				<div class="tech-stack">
-					<span>C#</span>
-					<span>Unity</span>
-					<span>C++</span>
-					<span>DirectX</span>
-				</div>
-				<div class="hero-links">
-					<a href="/portfolio" class="btn-primary">포트폴리오 →</a>
-					<a href="/resume" class="btn-secondary">이력서</a>
-					<a href={GITHUB_URL} target="_blank" rel="noopener" class="btn-secondary">GitHub</a>
+				<div class="contacts">
+					<a href="mailto:lostwaltz89@gmail.com">lostwaltz89@gmail.com</a>
+					<span class="sep">·</span>
+					<a href={GITHUB_URL} target="_blank" rel="noopener">github.com/lostwaltz</a>
+					<span class="sep">·</span>
+					<a href="https://istino.github.io">istino.github.io</a>
 				</div>
 			</section>
 
-			{posts.length > 0 && (
-				<section class="recent-posts">
-					<h2>최근 글</h2>
-					<ul>
-						{posts.map((post) => (
-							<li>
-								<a href={`/blog/${post.id}/`}>
-									<span class="post-title">{post.data.title}</span>
-									<span class="post-date">{post.data.pubDate.toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-								</a>
-							</li>
-						))}
-					</ul>
-					<a href="/blog" class="view-all">모든 글 보기 →</a>
-				</section>
-			)}
+			<hr />
+
+			<!-- 기술 스택 -->
+			<section class="section">
+				<h2 class="section-title">기술 스택</h2>
+				<div class="skill-grid">
+					<div class="skill-group">
+						<h3>주력</h3>
+						<p>C#, Unity, C++</p>
+					</div>
+					<div class="skill-group">
+						<h3>그래픽스</h3>
+						<p>DirectX</p>
+					</div>
+					<div class="skill-group">
+						<h3>기타</h3>
+						<p>DOTween, JSON</p>
+					</div>
+				</div>
+			</section>
+
+			<hr />
+
+			<!-- 포트폴리오 -->
+			<section class="section">
+				<h2 class="section-title">포트폴리오</h2>
+				{portfolio.map((item) => (
+					<div class="portfolio-item">
+						<div class="item-header">
+							<h3>
+								<a href={`/portfolio/${item.id}/`}>{item.data.title}</a>
+							</h3>
+							<div class="tech-tags">
+								{item.data.tech.map((t) => <span>{t}</span>)}
+							</div>
+						</div>
+						<p class="item-desc">{item.data.description}</p>
+					</div>
+				))}
+			</section>
+
+			<hr />
+
+			<!-- 학력 -->
+			<section class="section">
+				<h2 class="section-title">학력</h2>
+				<p class="placeholder">추가 예정</p>
+			</section>
 		</main>
 		<Footer />
 	</body>
@@ -62,12 +94,34 @@ const posts = (await getCollection('blog'))
 <style>
 	main {
 		max-width: 720px;
+		padding-top: 2em;
+		padding-bottom: 4em;
 	}
 
+	.print-btn {
+		display: flex;
+		justify-content: flex-end;
+		margin-bottom: 2em;
+	}
+	.print-btn button {
+		padding: 0.5em 1.2em;
+		background: transparent;
+		border: 1px solid rgb(var(--border));
+		border-radius: 6px;
+		color: rgb(var(--text-muted));
+		font-size: 0.875rem;
+		cursor: pointer;
+		transition: border-color 0.15s, color 0.15s;
+	}
+	.print-btn button:hover {
+		border-color: var(--accent);
+		color: var(--accent);
+	}
+
+	/* 히어로 */
 	.hero {
 		position: relative;
-		padding: 5em 0 4em;
-		border-bottom: 1px solid rgb(var(--border));
+		padding: 3em 0 2.5em;
 		overflow: hidden;
 	}
 	.hero::before {
@@ -83,125 +137,133 @@ const posts = (await getCollection('blog'))
 		z-index: 0;
 	}
 	.hero > * { position: relative; z-index: 1; }
+
 	.label {
-		font-size: 0.875rem;
+		font-size: 0.8rem;
 		color: var(--accent);
 		font-weight: 600;
-		letter-spacing: 0.05em;
+		letter-spacing: 0.08em;
 		text-transform: uppercase;
-		margin: 0 0 0.75em;
+		margin: 0 0 0.5em;
 	}
 	.hero h1 {
-		font-size: 3.5rem;
+		font-size: 3rem;
 		font-weight: 800;
 		letter-spacing: -0.03em;
-		margin: 0 0 0.5em;
+		margin: 0 0 0.4em;
 		line-height: 1;
 		text-shadow: 0 0 60px rgba(88, 166, 255, 0.25);
 	}
 	.desc {
-		font-size: 1.1rem;
+		font-size: 1rem;
 		color: rgb(var(--text-muted));
 		line-height: 1.6;
-		margin: 0 0 1.5em;
+		margin: 0 0 1em;
 	}
-	.tech-stack {
+	.contacts {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5em;
-		margin-bottom: 2em;
-	}
-	.tech-stack span {
-		padding: 0.25em 0.75em;
-		background: rgb(var(--bg-card));
-		border: 1px solid rgb(var(--border));
-		border-radius: 999px;
+		gap: 0.25em;
 		font-size: 0.875rem;
 		color: rgb(var(--text-muted));
-		font-family: monospace;
 	}
-	.hero-links {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75em;
+	.contacts a { color: rgb(var(--text-muted)); }
+	.contacts a:hover { color: var(--accent); text-decoration: none; }
+	.sep { opacity: 0.4; }
+
+	/* 섹션 공통 */
+	.section { padding: 2em 0; }
+	.section-title {
+		font-size: 0.8rem;
+		font-weight: 700;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		color: rgb(var(--text-muted));
+		margin: 0 0 1.25em;
 	}
-	.btn-primary {
-		padding: 0.6em 1.4em;
-		background: var(--accent);
-		color: rgb(var(--bg));
-		border-radius: 6px;
+
+	/* 기술 스택 */
+	.skill-grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+		gap: 1.5em;
+	}
+	.skill-group h3 {
+		font-size: 0.8rem;
+		color: rgb(var(--text-muted));
 		font-weight: 600;
+		margin: 0 0 0.25em;
+	}
+	.skill-group p {
+		font-family: monospace;
 		font-size: 0.95rem;
-		text-decoration: none;
-		transition: opacity 0.15s;
-	}
-	.btn-primary:hover {
-		opacity: 0.85;
-		text-decoration: none;
-		color: rgb(var(--bg));
-	}
-	.btn-secondary {
-		padding: 0.6em 1.4em;
-		background: transparent;
-		color: rgb(var(--text));
-		border: 1px solid rgb(var(--border));
-		border-radius: 6px;
-		font-size: 0.95rem;
-		text-decoration: none;
-		transition: border-color 0.15s, background 0.15s;
-	}
-	.btn-secondary:hover {
-		border-color: var(--accent);
-		background: rgb(var(--bg-card));
-		text-decoration: none;
+		margin: 0;
 		color: rgb(var(--text));
 	}
 
-	.recent-posts {
-		padding: 3em 0;
+	/* 포트폴리오 */
+	.portfolio-item {
+		padding: 1.5em 0;
+		border-bottom: 1px solid rgb(var(--border));
 	}
-	.recent-posts h2 {
-		font-size: 1.1rem;
-		font-weight: 600;
-		color: rgb(var(--text-muted));
-		text-transform: uppercase;
-		letter-spacing: 0.05em;
-		margin-bottom: 1.25em;
-	}
-	ul {
-		list-style: none;
-		padding: 0;
-		margin: 0 0 1.5em;
-	}
-	ul li a {
+	.portfolio-item:last-child { border-bottom: none; }
+	.item-header {
 		display: flex;
-		justify-content: space-between;
 		align-items: baseline;
 		gap: 1em;
-		padding: 0.75em 0;
-		border-bottom: 1px solid rgb(var(--border));
-		text-decoration: none;
+		flex-wrap: wrap;
+		margin-bottom: 0.5em;
+	}
+	.item-header h3 {
+		font-size: 1.1rem;
+		font-weight: 700;
+		margin: 0;
+	}
+	.item-header h3 a {
 		color: rgb(var(--text));
-		transition: color 0.15s;
-	}
-	ul li a:hover {
-		color: var(--accent);
 		text-decoration: none;
 	}
-	.post-title {
-		font-size: 1rem;
+	.item-header h3 a:hover { color: var(--accent); }
+	.tech-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35em;
 	}
-	.post-date {
-		font-size: 0.825rem;
+	.tech-tags span {
+		padding: 0.15em 0.55em;
+		background: rgb(var(--bg-card));
+		border: 1px solid rgb(var(--border));
+		border-radius: 4px;
+		font-size: 0.75rem;
+		font-family: monospace;
 		color: rgb(var(--text-muted));
-		white-space: nowrap;
-		flex-shrink: 0;
 	}
-	.view-all {
+	.item-desc {
 		font-size: 0.9rem;
 		color: rgb(var(--text-muted));
+		margin: 0;
+		line-height: 1.5;
 	}
-	.view-all:hover {
-		color: var(--accent);
+
+	.placeholder {
+		color: rgb(var(--text-muted));
+		font-style: italic;
+		font-size: 0.9rem;
+	}
+
+	@media print {
+		.hero h1 { color: black !important; text-shadow: none !important; }
+		.hero::before { display: none; }
+		.label { color: #555 !important; }
+		.desc, .contacts, .contacts a { color: #444 !important; }
+		.section-title { color: #666 !important; }
+		.skill-group h3 { color: #666 !important; }
+		.item-desc { color: #444 !important; }
+		.item-header h3 a { color: black !important; }
+		.tech-tags span {
+			background: #f0f0f0 !important;
+			border-color: #ccc !important;
+			color: #333 !important;
+		}
 	}
 </style>
