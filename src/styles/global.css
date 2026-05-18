@@ -1,49 +1,74 @@
 :root {
-	--accent: #58a6ff;
-	--accent-dark: #388bfd;
-	--bg: 13, 17, 23;
-	--bg-card: 22, 27, 34;
-	--text: 230, 237, 243;
-	--text-muted: 139, 148, 158;
-	--border: 48, 54, 61;
-	--box-shadow: 0 2px 6px rgba(0, 0, 0, 40%), 0 8px 24px rgba(0, 0, 0, 30%);
+	--accent: #7BA3FF;
+	--accent-dark: #5a86ff;
+	--accent-soft: rgba(123, 163, 255, 0.18);
+	--bg: 7, 9, 13;
+	--bg-card: 15, 19, 27;
+	--bg-alt: 17, 24, 39;
+	--text: 243, 246, 252;
+	--text-muted: 147, 164, 189;
+	--border: 27, 36, 48;
+	--box-shadow: 0 2px 8px rgba(0,0,0,0.5), 0 12px 32px rgba(0,0,0,0.4);
+	--font-display: 'Space Grotesk', var(--font-atkinson), sans-serif;
+	--font-body: 'Inter', var(--font-atkinson), sans-serif;
+	--font-mono: 'JetBrains Mono', monospace;
+}
+
+html {
+	scroll-behavior: smooth;
 }
 
 body {
-	font-family: var(--font-atkinson);
+	font-family: var(--font-body);
 	margin: 0;
 	padding: 0;
 	text-align: left;
 	background-color: rgb(var(--bg));
-	background-image: radial-gradient(rgba(88, 166, 255, 0.055) 1px, transparent 1px);
-	background-size: 28px 28px;
 	color: rgb(var(--text));
-	font-size: 20px;
+	font-size: 16px;
 	line-height: 1.7;
 	word-wrap: break-word;
 	overflow-wrap: break-word;
 }
 
+/* background grid overlay */
 body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	background-image:
+		linear-gradient(rgba(123,163,255,0.025) 1px, transparent 1px),
+		linear-gradient(90deg, rgba(123,163,255,0.025) 1px, transparent 1px);
+	background-size: 64px 64px;
+	pointer-events: none;
+	z-index: 0;
+}
+
+/* top accent line */
+body::after {
 	content: '';
 	position: fixed;
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 2px;
-	background: linear-gradient(90deg, transparent, var(--accent), transparent);
+	height: 1px;
+	background: linear-gradient(90deg, transparent 0%, var(--accent) 40%, var(--accent) 60%, transparent 100%);
+	opacity: 0.5;
 	z-index: 200;
 	pointer-events: none;
 }
 
 main {
-	width: 720px;
+	width: 100%;
 	max-width: calc(100% - 2em);
 	margin: auto;
 	padding: 3em 1em;
+	position: relative;
+	z-index: 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
+	font-family: var(--font-display);
 	margin: 0 0 0.5rem 0;
 	color: rgb(var(--text));
 	line-height: 1.2;
@@ -69,10 +94,7 @@ a:hover {
 p { margin-bottom: 1em; }
 .prose p { margin-bottom: 2em; }
 
-textarea {
-	width: 100%;
-	font-size: 16px;
-}
+textarea { width: 100%; font-size: 16px; }
 input { font-size: 16px; }
 table { width: 100%; }
 
@@ -88,6 +110,7 @@ code {
 	border: 1px solid rgb(var(--border));
 	border-radius: 4px;
 	font-size: 0.875em;
+	font-family: var(--font-mono);
 	color: #f0883e;
 }
 
@@ -99,6 +122,7 @@ pre {
 }
 pre > code {
 	all: unset;
+	font-family: var(--font-mono);
 	color: rgb(var(--text));
 }
 
@@ -116,54 +140,43 @@ hr {
 	margin: 2em 0;
 }
 
+/* ── Fade-up animation ── */
+.fade-up {
+	opacity: 0;
+	transform: translateY(24px);
+	transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-up.visible {
+	opacity: 1;
+	transform: translateY(0);
+}
+
 @media (max-width: 720px) {
-	body { font-size: 18px; }
+	body { font-size: 15px; }
 	main { padding: 1em; }
 }
 
 .sr-only {
-	border: 0;
-	padding: 0;
-	margin: 0;
+	border: 0; padding: 0; margin: 0;
 	position: absolute !important;
-	height: 1px;
-	width: 1px;
+	height: 1px; width: 1px;
 	overflow: hidden;
-	clip: rect(1px 1px 1px 1px);
 	clip: rect(1px, 1px, 1px, 1px);
 	clip-path: inset(50%);
 	white-space: nowrap;
 }
 
-/* 인쇄/PDF 출력 */
 @media print {
 	body {
 		background: white !important;
 		color: black !important;
 		font-size: 11pt;
 	}
-	header, footer, nav, .no-print {
-		display: none !important;
-	}
-	main {
-		width: 100%;
-		max-width: 100%;
-		padding: 0;
-		margin: 0;
-	}
-	h1, h2, h3, h4, h5, h6 {
-		color: black !important;
-	}
-	a {
-		color: black !important;
-		text-decoration: none;
-	}
-	code {
-		background: #f0f0f0 !important;
-		border-color: #ccc !important;
-		color: #333 !important;
-	}
-	hr {
-		border-color: #ccc !important;
-	}
+	body::before, body::after { display: none !important; }
+	header, footer, nav { display: none !important; }
+	main { width: 100%; max-width: 100%; padding: 0; margin: 0; }
+	h1, h2, h3, h4, h5, h6 { color: black !important; }
+	a { color: black !important; text-decoration: none; }
+	code { background: #f0f0f0 !important; border-color: #ccc !important; color: #333 !important; }
+	hr { border-color: #ccc !important; }
 }

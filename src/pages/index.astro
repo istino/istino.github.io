@@ -4,9 +4,18 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import { SITE_TITLE, SITE_DESCRIPTION, GITHUB_URL } from '../consts';
 import { getCollection } from 'astro:content';
+import { Image } from 'astro:assets';
 
 const portfolio = (await getCollection('portfolio', ({ data }) => !data.draft))
 	.sort((a, b) => a.data.priority - b.data.priority);
+
+const skillGroups = [
+	{ num: '01', label: 'LANGUAGES',        items: ['C#', 'C++'] },
+	{ num: '02', label: 'ENGINE',            items: ['Unity'] },
+	{ num: '03', label: 'GRAPHICS',          items: ['DirectX'] },
+	{ num: '04', label: 'TOOLS & LIBS',      items: ['DOTween', 'JSON'] },
+	{ num: '05', label: 'VERSION CONTROL',   items: ['Git'] },
+];
 ---
 
 <!doctype html>
@@ -17,253 +26,625 @@ const portfolio = (await getCollection('portfolio', ({ data }) => !data.draft))
 	<body>
 		<Header />
 		<main>
-			<div class="print-btn no-print">
-				<button onclick="window.print()">PDF로 저장</button>
-			</div>
 
-			<!-- 나는 누구인가 -->
-			<section class="hero">
-				<p class="label">Game Client Developer</p>
-				<h1>김민철</h1>
-				<p class="desc">
-					게임의 경험을 만드는 클라이언트 개발자.<br />
-					C#과 Unity로 플레이어가 느끼는 순간을 설계합니다.
-				</p>
-				<div class="contacts">
-					<a href="mailto:lostwaltz89@gmail.com">lostwaltz89@gmail.com</a>
-					<span class="sep">·</span>
-					<a href={GITHUB_URL} target="_blank" rel="noopener">github.com/lostwaltz</a>
-					<span class="sep">·</span>
-					<a href="https://istino.github.io">istino.github.io</a>
+			<!-- ── Hero ── -->
+			<section id="about" class="hero">
+				<div class="hero-left fade-up">
+					<p class="eyebrow">&#9675; GAME CLIENT DEVELOPER</p>
+					<h1>KIM<br />MINCHUL</h1>
+					<p class="desc">
+						게임의 경험을 만드는 클라이언트 개발자.<br />
+						C#과 Unity로 플레이어가 느끼는 순간을 설계합니다.
+					</p>
+					<div class="hero-actions">
+						<a href={GITHUB_URL} target="_blank" rel="noopener" class="btn-primary">
+							<svg viewBox="0 0 16 16" width="15" height="15" aria-hidden="true">
+								<path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
+							</svg>
+							GitHub
+						</a>
+						<a href="mailto:lostwaltz89@gmail.com" class="btn-ghost">Contact &#8594;</a>
+					</div>
+					<p class="footer-note">// CODE. CREATE. CONNECT.</p>
 				</div>
-			</section>
-
-			<hr />
-
-			<!-- 기술 스택 -->
-			<section class="section">
-				<h2 class="section-title">기술 스택</h2>
-				<div class="skill-grid">
-					<div class="skill-group">
-						<h3>주력</h3>
-						<p>C#, Unity, C++</p>
-					</div>
-					<div class="skill-group">
-						<h3>그래픽스</h3>
-						<p>DirectX</p>
-					</div>
-					<div class="skill-group">
-						<h3>기타</h3>
-						<p>DOTween, JSON</p>
-					</div>
-				</div>
-			</section>
-
-			<hr />
-
-			<!-- 포트폴리오 -->
-			<section class="section">
-				<h2 class="section-title">포트폴리오</h2>
-				{portfolio.map((item) => (
-					<div class="portfolio-item">
-						<div class="item-header">
-							<h3>
-								<a href={`/portfolio/${item.id}/`}>{item.data.title}</a>
-							</h3>
-							<div class="tech-tags">
-								{item.data.tech.map((t) => <span>{t}</span>)}
+				<div class="hero-right fade-up" style="transition-delay:0.15s">
+					<div class="engine-panel">
+						<div class="panel-header">
+							<span>CLIENT</span>
+							<span class="ph-sep">|</span>
+							<span>GAMEPLAY SYSTEMS</span>
+							<div class="panel-icons">
+								<span>&#9635;</span><span>&#9635;</span><span>&#9635;</span>
 							</div>
 						</div>
-						<p class="item-desc">{item.data.description}</p>
+						<div class="canvas-wrap">
+							<canvas id="heroCanvas"></canvas>
+							<div class="metrics-overlay">
+								<p class="metrics-title">NAVIGATION</p>
+								<div class="metrics-row"><span>NODES</span><span class="mv">2,134</span></div>
+								<div class="metrics-row"><span>LINKS</span><span class="mv">5,678</span></div>
+								<div class="metrics-row"><span>AGENTS</span><span class="mv">32</span></div>
+							</div>
+						</div>
+						<div class="panel-footer">
+							<span>// Build meaningful systems</span>
+							<span>// Optimize performance</span>
+							<span>// Deliver fun</span>
+						</div>
 					</div>
-				))}
+				</div>
 			</section>
 
-			<hr />
-
-			<!-- 학력 -->
-			<section class="section">
-				<h2 class="section-title">학력</h2>
-				<p class="placeholder">추가 예정</p>
+			<!-- ── Skills ── -->
+			<section id="skills" class="section fade-up">
+				<div class="section-header">
+					<span class="section-label">// SKILLS</span>
+					<span class="section-sub">TECH STACK</span>
+				</div>
+				<div class="skill-groups">
+					{skillGroups.map(g => (
+						<div class="skill-group">
+							<span class="snum">{g.num}</span>
+							<span class="slabel">{g.label}</span>
+							<span class="sitems">{g.items.join('\n')}</span>
+						</div>
+					))}
+				</div>
 			</section>
+
+			<!-- ── Projects ── -->
+			<section id="projects" class="section">
+				<div class="section-header fade-up">
+					<span class="section-label">// PROJECTS</span>
+					<span class="section-sub">FEATURED WORKS</span>
+				</div>
+				<div class="project-list">
+					{portfolio.map((item, i) => (
+						<a href={`/portfolio/${item.id}/`} class="project-row fade-up">
+							<div class="project-info">
+								<span class="pnum">0{i + 1} ——</span>
+								<h2 class="ptitle">{item.data.title.toUpperCase()}</h2>
+								<p class="pgenre">{item.data.description.split('.')[0]}</p>
+								<p class="pdesc">{item.data.description}</p>
+								<div class="ptags">
+									{item.data.tech.map(t => <span>{t}</span>)}
+								</div>
+								<span class="plink">View Project &#8599;</span>
+							</div>
+							<div class="project-thumb">
+								{item.data.thumbnail
+									? <Image src={item.data.thumbnail} alt={item.data.title} width={600} height={375} />
+									: <div class="thumb-bg">
+											<div class="thumb-grid"></div>
+											<span class="thumb-letter">{item.data.title[0].toUpperCase()}</span>
+										</div>
+								}
+							</div>
+						</a>
+					))}
+				</div>
+			</section>
+
+			<!-- ── About / Values ── -->
+			<section id="contact" class="section values-section fade-up">
+				<div class="values-left">
+					<span class="section-label">// ABOUT ME</span>
+					<p class="values-headline">
+						더 나은 플레이 경험을 위해<br />
+						코드로 게임을 설계합니다.
+					</p>
+				</div>
+				<div class="values-right">
+					<div class="value-card">
+						<span class="vicon">&#9635;</span>
+						<span class="vtitle">SYSTEMS</span>
+						<span class="vdesc">확장 가능하고 유지보수 가능한 클라이언트 아키텍처를 설계합니다.</span>
+					</div>
+					<div class="value-card">
+						<span class="vicon">&#9651;</span>
+						<span class="vtitle">PERFORMANCE</span>
+						<span class="vdesc">최적화와 프로파일링을 통해 안정적인 성능을 만듭니다.</span>
+					</div>
+					<div class="value-card">
+						<span class="vicon">&#9711;</span>
+						<span class="vtitle">EXPERIENCE</span>
+						<span class="vdesc">플레이어 중심의 기능과 재미있는 상호작용을 구현합니다.</span>
+					</div>
+				</div>
+			</section>
+
 		</main>
 		<Footer />
 	</body>
 </html>
 
+<script>
+// ── Canvas particle network ──
+function initCanvas() {
+	const canvas = document.getElementById('heroCanvas') as HTMLCanvasElement;
+	if (!canvas) return;
+	const ctx = canvas.getContext('2d');
+	if (!ctx) return;
+
+	function resize() {
+		canvas.width  = canvas.offsetWidth;
+		canvas.height = canvas.offsetHeight;
+	}
+	resize();
+	window.addEventListener('resize', resize);
+
+	const nodes: { x: number; y: number; vx: number; vy: number; r: number }[] = [];
+	for (let i = 0; i < 50; i++) {
+		nodes.push({
+			x:  Math.random() * canvas.width,
+			y:  Math.random() * canvas.height,
+			vx: (Math.random() - 0.5) * 0.22,
+			vy: (Math.random() - 0.5) * 0.22,
+			r:  Math.random() * 1.4 + 0.4,
+		});
+	}
+
+	function draw() {
+		ctx!.clearRect(0, 0, canvas.width, canvas.height);
+		for (let i = 0; i < nodes.length; i++) {
+			for (let j = i + 1; j < nodes.length; j++) {
+				const dx = nodes[i].x - nodes[j].x;
+				const dy = nodes[i].y - nodes[j].y;
+				const d  = Math.sqrt(dx * dx + dy * dy);
+				if (d < 100) {
+					ctx!.beginPath();
+					ctx!.strokeStyle = `rgba(123,163,255,${0.2 * (1 - d / 100)})`;
+					ctx!.lineWidth = 0.5;
+					ctx!.moveTo(nodes[i].x, nodes[i].y);
+					ctx!.lineTo(nodes[j].x, nodes[j].y);
+					ctx!.stroke();
+				}
+			}
+		}
+		for (const n of nodes) {
+			ctx!.beginPath();
+			ctx!.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+			ctx!.fillStyle = 'rgba(123,163,255,0.75)';
+			ctx!.fill();
+			n.x += n.vx;
+			n.y += n.vy;
+			if (n.x < 0 || n.x > canvas.width)  n.vx *= -1;
+			if (n.y < 0 || n.y > canvas.height) n.vy *= -1;
+		}
+		requestAnimationFrame(draw);
+	}
+	draw();
+}
+
+// ── Fade-up on scroll ──
+function initFadeUp() {
+	const els = document.querySelectorAll('.fade-up');
+	const obs = new IntersectionObserver((entries) => {
+		entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+	}, { threshold: 0.08 });
+	els.forEach(el => obs.observe(el));
+}
+
+initCanvas();
+initFadeUp();
+</script>
+
 <style>
 	main {
-		max-width: 720px;
-		padding-top: 2em;
-		padding-bottom: 4em;
+		width: 100%;
+		max-width: 1100px;
+		padding: 0 2.5em 8em;
 	}
 
-	.print-btn {
-		display: flex;
-		justify-content: flex-end;
-		margin-bottom: 2em;
-	}
-	.print-btn button {
-		padding: 0.5em 1.2em;
-		background: transparent;
-		border: 1px solid rgb(var(--border));
-		border-radius: 6px;
-		color: rgb(var(--text-muted));
-		font-size: 0.875rem;
-		cursor: pointer;
-		transition: border-color 0.15s, color 0.15s;
-	}
-	.print-btn button:hover {
-		border-color: var(--accent);
-		color: var(--accent);
-	}
-
-	/* 히어로 */
+	/* ── Hero ── */
 	.hero {
-		position: relative;
-		padding: 3em 0 2.5em;
-		overflow: hidden;
+		display: grid;
+		grid-template-columns: 1fr 1.05fr;
+		gap: 5em;
+		align-items: center;
+		padding: 7em 0 6em;
 	}
-	.hero::before {
-		content: '';
-		position: absolute;
-		top: 40%;
-		left: -15%;
-		width: 600px;
-		height: 500px;
-		background: radial-gradient(ellipse, rgba(88, 166, 255, 0.1) 0%, transparent 65%);
-		transform: translateY(-50%);
-		pointer-events: none;
-		z-index: 0;
-	}
-	.hero > * { position: relative; z-index: 1; }
 
-	.label {
-		font-size: 0.8rem;
+	.eyebrow {
+		font-size: 0.68rem;
+		font-weight: 700;
+		letter-spacing: 0.16em;
 		color: var(--accent);
-		font-weight: 600;
-		letter-spacing: 0.08em;
-		text-transform: uppercase;
-		margin: 0 0 0.5em;
+		margin: 0 0 1.5em;
 	}
-	.hero h1 {
-		font-size: 3rem;
+
+	.hero-left h1 {
+		font-family: var(--font-display);
+		font-size: clamp(4rem, 7.5vw, 6.5rem);
 		font-weight: 800;
 		letter-spacing: -0.03em;
-		margin: 0 0 0.4em;
-		line-height: 1;
-		text-shadow: 0 0 60px rgba(88, 166, 255, 0.25);
+		line-height: 0.92;
+		margin: 0 0 0.7em;
+		color: rgb(var(--text));
 	}
-	.desc {
-		font-size: 1rem;
-		color: rgb(var(--text-muted));
-		line-height: 1.6;
-		margin: 0 0 1em;
-	}
-	.contacts {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.25em;
-		font-size: 0.875rem;
-		color: rgb(var(--text-muted));
-	}
-	.contacts a { color: rgb(var(--text-muted)); }
-	.contacts a:hover { color: var(--accent); text-decoration: none; }
-	.sep { opacity: 0.4; }
 
-	/* 섹션 공통 */
-	.section { padding: 2em 0; }
-	.section-title {
-		font-size: 0.8rem;
-		font-weight: 700;
-		text-transform: uppercase;
+	.desc {
+		font-size: 0.92rem;
+		color: rgb(var(--text-muted));
+		line-height: 1.8;
+		margin: 0 0 2.25em;
+	}
+
+	.hero-actions {
+		display: flex;
+		gap: 0.75em;
+		margin-bottom: 2.5em;
+	}
+
+	.btn-primary {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.45em;
+		padding: 0.6em 1.5em;
+		background: var(--accent-soft);
+		border: 1px solid rgba(123,163,255,0.35);
+		color: var(--accent);
+		font-size: 0.78rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		border-radius: 6px;
+		text-decoration: none;
+		transition: background 0.2s, border-color 0.2s;
+	}
+	.btn-primary:hover { background: rgba(123,163,255,0.28); border-color: var(--accent); text-decoration: none; }
+
+	.btn-ghost {
+		display: inline-flex;
+		align-items: center;
+		padding: 0.6em 1.5em;
+		border: 1px solid rgb(var(--border));
+		color: rgb(var(--text-muted));
+		font-size: 0.78rem;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		border-radius: 6px;
+		text-decoration: none;
+		transition: border-color 0.2s, color 0.2s;
+	}
+	.btn-ghost:hover { border-color: rgb(var(--text-muted)); color: rgb(var(--text)); text-decoration: none; }
+
+	.footer-note {
+		font-family: var(--font-mono);
+		font-size: 0.68rem;
 		letter-spacing: 0.1em;
 		color: rgb(var(--text-muted));
-		margin: 0 0 1.25em;
-	}
-
-	/* 기술 스택 */
-	.skill-grid {
-		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-		gap: 1.5em;
-	}
-	.skill-group h3 {
-		font-size: 0.8rem;
-		color: rgb(var(--text-muted));
-		font-weight: 600;
-		margin: 0 0 0.25em;
-	}
-	.skill-group p {
-		font-family: monospace;
-		font-size: 0.95rem;
-		margin: 0;
-		color: rgb(var(--text));
-	}
-
-	/* 포트폴리오 */
-	.portfolio-item {
-		padding: 1.5em 0;
-		border-bottom: 1px solid rgb(var(--border));
-	}
-	.portfolio-item:last-child { border-bottom: none; }
-	.item-header {
-		display: flex;
-		align-items: baseline;
-		gap: 1em;
-		flex-wrap: wrap;
-		margin-bottom: 0.5em;
-	}
-	.item-header h3 {
-		font-size: 1.1rem;
-		font-weight: 700;
+		opacity: 0.4;
 		margin: 0;
 	}
-	.item-header h3 a {
-		color: rgb(var(--text));
-		text-decoration: none;
-	}
-	.item-header h3 a:hover { color: var(--accent); }
-	.tech-tags {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.35em;
-	}
-	.tech-tags span {
-		padding: 0.15em 0.55em;
+
+	/* Engine panel */
+	.engine-panel {
 		background: rgb(var(--bg-card));
 		border: 1px solid rgb(var(--border));
+		border-radius: 14px;
+		overflow: hidden;
+		display: flex;
+		flex-direction: column;
+		height: 420px;
+		box-shadow: var(--box-shadow);
+	}
+
+	.panel-header {
+		display: flex;
+		align-items: center;
+		gap: 0.6em;
+		padding: 0.7em 1.1em;
+		border-bottom: 1px solid rgb(var(--border));
+		font-family: var(--font-mono);
+		font-size: 0.6rem;
+		letter-spacing: 0.12em;
+		color: rgb(var(--text-muted));
+	}
+	.ph-sep { opacity: 0.25; }
+	.panel-icons { margin-left: auto; display: flex; gap: 0.5em; opacity: 0.25; font-size: 0.55rem; }
+
+	.canvas-wrap {
+		flex: 1;
+		position: relative;
+		overflow: hidden;
+	}
+	#heroCanvas {
+		width: 100%;
+		height: 100%;
+		display: block;
+	}
+
+	.metrics-overlay {
+		position: absolute;
+		top: 1em;
+		right: 1em;
+		background: rgba(7, 9, 13, 0.75);
+		border: 1px solid rgb(var(--border));
+		border-radius: 6px;
+		padding: 0.65em 0.9em;
+		backdrop-filter: blur(8px);
+	}
+	.metrics-title {
+		font-family: var(--font-mono);
+		font-size: 0.55rem;
+		letter-spacing: 0.14em;
+		color: rgb(var(--text-muted));
+		margin: 0 0 0.4em;
+	}
+	.metrics-row {
+		display: flex;
+		justify-content: space-between;
+		gap: 1.5em;
+		font-family: var(--font-mono);
+		font-size: 0.55rem;
+		color: rgb(var(--text-muted));
+		line-height: 1.8;
+	}
+	.mv { color: var(--accent); font-weight: 600; }
+
+	.panel-footer {
+		display: flex;
+		flex-direction: column;
+		gap: 0.15em;
+		padding: 0.7em 1.1em;
+		border-top: 1px solid rgb(var(--border));
+		font-family: var(--font-mono);
+		font-size: 0.6rem;
+		color: #4a5568;
+	}
+
+	/* ── Sections ── */
+	.section {
+		padding: 6em 0 0;
+		border-top: 1px solid rgb(var(--border));
+	}
+
+	.section-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: baseline;
+		margin-bottom: 3em;
+	}
+
+	.section-label {
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		font-weight: 600;
+		letter-spacing: 0.12em;
+		color: var(--accent);
+	}
+
+	.section-sub {
+		font-size: 0.62rem;
+		letter-spacing: 0.16em;
+		color: rgb(var(--text-muted));
+		opacity: 0.4;
+	}
+
+	/* ── Skills ── */
+	.skill-groups {
+		display: grid;
+		grid-template-columns: repeat(5, 1fr);
+		gap: 1.5em;
+		padding-bottom: 0.5em;
+	}
+
+	.skill-group { display: flex; flex-direction: column; gap: 0.4em; }
+
+	.snum {
+		font-family: var(--font-mono);
+		font-size: 0.68rem;
+		font-weight: 700;
+		color: var(--accent);
+		letter-spacing: 0.06em;
+	}
+	.slabel {
+		font-size: 0.6rem;
+		letter-spacing: 0.1em;
+		color: rgb(var(--text-muted));
+		text-transform: uppercase;
+	}
+	.sitems {
+		font-family: var(--font-display);
+		font-size: 1rem;
+		font-weight: 700;
+		color: rgb(var(--text));
+		white-space: pre-line;
+		line-height: 1.55;
+	}
+
+	/* ── Projects ── */
+	.project-list { display: flex; flex-direction: column; }
+
+	.project-row {
+		display: grid;
+		grid-template-columns: 1fr 1.15fr;
+		gap: 4em;
+		align-items: center;
+		padding: 4em 0;
+		border-bottom: 1px solid rgb(var(--border));
+		text-decoration: none;
+		transition: background 0.2s;
+	}
+	.project-row:last-child { border-bottom: none; }
+	.project-row:hover { text-decoration: none; }
+	.project-row:hover .ptitle { color: var(--accent); }
+
+	.pnum {
+		display: block;
+		font-family: var(--font-mono);
+		font-size: 0.68rem;
+		letter-spacing: 0.1em;
+		color: var(--accent);
+		margin-bottom: 0.6em;
+	}
+
+	.ptitle {
+		font-family: var(--font-display);
+		font-size: clamp(2.2rem, 4vw, 3.2rem);
+		font-weight: 800;
+		letter-spacing: -0.025em;
+		line-height: 1;
+		margin: 0 0 0.35em;
+		color: rgb(var(--text));
+		transition: color 0.2s;
+	}
+
+	.pgenre {
+		font-family: var(--font-mono);
+		font-size: 0.7rem;
+		color: var(--accent);
+		letter-spacing: 0.06em;
+		margin: 0 0 0.9em;
+		opacity: 0.8;
+	}
+
+	.pdesc {
+		font-size: 0.85rem;
+		color: rgb(var(--text-muted));
+		line-height: 1.7;
+		margin: 0 0 1.5em;
+		max-width: 420px;
+	}
+
+	.ptags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.4em;
+		margin-bottom: 1.5em;
+	}
+	.ptags span {
+		padding: 0.2em 0.7em;
+		background: rgba(123,163,255,0.07);
+		border: 1px solid rgba(123,163,255,0.18);
 		border-radius: 4px;
+		font-family: var(--font-mono);
+		font-size: 0.68rem;
+		color: rgb(var(--text-muted));
+		transition: border-color 0.2s, color 0.2s;
+	}
+	.project-row:hover .ptags span {
+		border-color: rgba(123,163,255,0.35);
+		color: var(--accent);
+	}
+
+	.plink {
 		font-size: 0.75rem;
-		font-family: monospace;
+		font-weight: 600;
+		letter-spacing: 0.06em;
 		color: rgb(var(--text-muted));
+		transition: color 0.15s;
 	}
-	.item-desc {
-		font-size: 0.9rem;
-		color: rgb(var(--text-muted));
-		margin: 0;
+	.project-row:hover .plink { color: var(--accent); }
+
+	.project-thumb {
+		border-radius: 12px;
+		overflow: hidden;
+		aspect-ratio: 16 / 10;
+		border: 1px solid rgb(var(--border));
+		transition: border-color 0.3s, box-shadow 0.3s;
+	}
+	.project-row:hover .project-thumb {
+		border-color: rgba(123,163,255,0.4);
+		box-shadow: 0 0 32px rgba(123,163,255,0.12), 0 8px 32px rgba(0,0,0,0.4);
+	}
+	.project-thumb img {
+		width: 100%; height: 100%;
+		object-fit: cover; border-radius: 0;
+		transition: transform 0.4s ease;
+	}
+	.project-row:hover .project-thumb img { transform: scale(1.03); }
+
+	.thumb-bg {
+		width: 100%; height: 100%;
+		background: rgb(var(--bg-card));
+		position: relative;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+	}
+	.thumb-grid {
+		position: absolute;
+		inset: 0;
+		background-image:
+			linear-gradient(rgba(123,163,255,0.035) 1px, transparent 1px),
+			linear-gradient(90deg, rgba(123,163,255,0.035) 1px, transparent 1px);
+		background-size: 32px 32px;
+	}
+	.thumb-letter {
+		font-family: var(--font-display);
+		font-size: 7rem;
+		font-weight: 900;
+		color: rgba(123,163,255,0.06);
+		position: relative;
+		z-index: 1;
+		user-select: none;
+		letter-spacing: -0.04em;
+	}
+
+	/* ── Values ── */
+	.values-section {
+		display: grid;
+		grid-template-columns: 1fr 2fr;
+		gap: 5em;
+		align-items: start;
+		padding-bottom: 2em;
+	}
+
+	.values-left { display: flex; flex-direction: column; gap: 1em; }
+
+	.values-headline {
+		font-family: var(--font-display);
+		font-size: 1.35rem;
+		font-weight: 700;
 		line-height: 1.5;
+		color: rgb(var(--text));
+		margin: 0;
 	}
 
-	.placeholder {
+	.values-right {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 2.5em;
+		padding-top: 2em;
+	}
+
+	.value-card { display: flex; flex-direction: column; gap: 0.55em; }
+
+	.vicon { font-size: 1.1rem; color: var(--accent); opacity: 0.65; }
+
+	.vtitle {
+		font-family: var(--font-mono);
+		font-size: 0.65rem;
+		font-weight: 600;
+		letter-spacing: 0.14em;
+		color: rgb(var(--text));
+	}
+
+	.vdesc {
+		font-size: 0.8rem;
 		color: rgb(var(--text-muted));
-		font-style: italic;
-		font-size: 0.9rem;
+		line-height: 1.65;
 	}
 
-	@media print {
-		.hero h1 { color: black !important; text-shadow: none !important; }
-		.hero::before { display: none; }
-		.label { color: #555 !important; }
-		.desc, .contacts, .contacts a { color: #444 !important; }
-		.section-title { color: #666 !important; }
-		.skill-group h3 { color: #666 !important; }
-		.item-desc { color: #444 !important; }
-		.item-header h3 a { color: black !important; }
-		.tech-tags span {
-			background: #f0f0f0 !important;
-			border-color: #ccc !important;
-			color: #333 !important;
-		}
+	/* ── Responsive ── */
+	@media (max-width: 1024px) {
+		main { padding: 0 2.5em 6em; }
+		.hero { gap: 3em; padding: 5em 0 4em; }
+	}
+	@media (max-width: 860px) {
+		main { padding: 0 1.5em 5em; }
+		.hero { grid-template-columns: 1fr; gap: 2.5em; padding: 3.5em 0 3em; }
+		.hero-right { order: -1; }
+		.engine-panel { height: 280px; }
+		.skill-groups { grid-template-columns: repeat(3, 1fr); }
+		.project-row { grid-template-columns: 1fr; gap: 1.75em; }
+		.project-thumb { order: -1; }
+		.values-section { grid-template-columns: 1fr; gap: 2em; }
+		.values-right { grid-template-columns: 1fr; gap: 1.5em; }
+	}
+	@media (max-width: 480px) {
+		.skill-groups { grid-template-columns: repeat(2, 1fr); }
 	}
 </style>
