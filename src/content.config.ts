@@ -16,16 +16,20 @@ const blog = defineCollection({
 
 const portfolio = defineCollection({
 	loader: glob({ base: './src/content/portfolio', pattern: '**/*.{md,mdx}' }),
-	schema: ({ image }) => z.object({
+	schema: z.object({
 		title: z.string(),
 		description: z.string(),
 		tech: z.array(z.string()),
 		priority: z.number().default(99),
 		pubDate: z.coerce.date(),
-		thumbnail: z.optional(image()),
+		thumbnail: z.string().optional(),
 		link: z.string().optional(),
 		github: z.string().optional(),
 		draft: z.boolean().default(false),
+		period: z.string().optional(),
+		team: z.string().optional(),
+		featuredBullets: z.array(z.object({ title: z.string(), description: z.string() })).optional(),
+		bullets: z.array(z.string()).optional(),
 	}),
 });
 
