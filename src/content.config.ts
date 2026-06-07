@@ -30,6 +30,7 @@ const portfolio = defineCollection({
 		team: z.string().optional(),
 		featuredBullets: z.array(z.object({ title: z.string(), description: z.string() })).optional(),
 		bullets: z.array(z.string()).optional(),
+		award: z.string().optional(),
 	}),
 });
 
