@@ -140,6 +140,12 @@ const skillGroups = [
 										{item.data.bullets.map(b => <li>{b}</li>)}
 									</ul>
 								)}
+								{item.data.award && (
+									<div class="fp-award">
+										<img src={item.data.award} alt="수상" class="fp-award-img" />
+										<span class="fp-award-label">내일배움캠프 최종 팀프로젝트 최우수상</span>
+									</div>
+								)}
 							</div>
 							<!-- Right: thumbnail + title + meta (secondary) -->
 							<div class="fp-sidebar">
@@ -529,6 +535,27 @@ requestAnimationFrame(() => {
 	}
 
 	.fp-content { display: flex; flex-direction: column; gap: 1.25rem; }
+
+	.fp-award {
+		display: flex;
+		align-items: center;
+		gap: 0.75rem;
+		padding-top: 0.75rem;
+		border-top: 1px solid rgb(var(--border));
+		opacity: 0.55;
+	}
+	.fp-award-img {
+		height: 32px;
+		width: auto;
+		border-radius: 2px;
+		flex-shrink: 0;
+	}
+	.fp-award-label {
+		font-family: var(--font-mono);
+		font-size: 0.6rem;
+		letter-spacing: 0.06em;
+		color: rgb(var(--text-muted));
+	}
 
 	.fp-title {
 		font-family: var(--font-display);

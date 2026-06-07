@@ -6,6 +6,7 @@ priority: 1
 thumbnail: "/portfolio/steampack-1.png"
 pubDate: 2024-11-01
 draft: false
+award: "/portfolio/steampack-award.png"
 period: "2024.11 ~ 2025.01"
 team: "4인 팀 리더 · 내일배움캠프 최우수 (23팀 중 1위)"
 featuredBullets:
